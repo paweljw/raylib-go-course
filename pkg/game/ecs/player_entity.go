@@ -7,4 +7,5 @@ type PlayerEntity struct {
 	*TextureComponent
 	*RenderComponent
 	*InputComponent
+	*CameraComponent
 }

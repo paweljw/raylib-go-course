@@ -20,7 +20,8 @@ func NewPlayerEntity() *ecs.PlayerEntity {
 			Rotation: 0,
 			Tint:     rl.White,
 		},
-		InputComponent: &ecs.InputComponent{Speed: common.PlayerSpeed},
+		InputComponent:  &ecs.InputComponent{Speed: common.PlayerSpeed},
+		CameraComponent: &ecs.CameraComponent{Camera: rl.NewCamera2D(rl.NewVector2(common.ScreenWidth/2, common.ScreenHeight/2), rl.NewVector2(0, 0), 0, 1.0)},
 	}
 
 	return &playerEntity

@@ -20,7 +20,14 @@ type Renderable interface {
 }
 
 type RenderSystem struct {
+	camera   *rl.Camera2D
 	entities []renderSystemEntity
+	world    *ecs.World
+}
+
+func (m *RenderSystem) New(w *ecs.World) {
+	m.world = w
+	m.camera = GetWorldCamera(w)
 }
 
 func (m *RenderSystem) Quit() {
@@ -31,7 +38,11 @@ func (m *RenderSystem) Quit() {
 
 func (m *RenderSystem) AddByInterface(o ecs.Identifier) {
 	obj := o.(Renderable)
-	m.Add(*obj.GetBasicEntity(), obj.GetTextureComponent(), obj.GetRenderComponent())
+	m.Add(
+		*obj.GetBasicEntity(),
+		obj.GetTextureComponent(),
+		obj.GetRenderComponent(),
+	)
 }
 
 func (m *RenderSystem) Add(basic ecs.BasicEntity, texture *TextureComponent, render *RenderComponent) {
@@ -63,6 +74,16 @@ func (m *RenderSystem) Remove(basic ecs.BasicEntity) {
 }
 
 func (m *RenderSystem) Update(dt float32) {
+	if m.camera == nil {
+		m.camera = GetWorldCamera(m.world)
+		if m.camera == nil {
+			return
+		}
+	}
+
+	rl.BeginDrawing()
+	rl.BeginMode2D(*m.camera)
+
 	for _, entity := range m.entities {
 		screenRect := common.WorldRectToScreen(entity.Dest)
 
@@ -74,6 +95,10 @@ func (m *RenderSystem) Update(dt float32) {
 			entity.Tint,
 		)
 	}
+
+	rl.EndMode2D()
+	rl.DrawFPS(0, 0)
+	rl.EndDrawing()
 }
 
 func AddRenderSystemToWorld(w *ecs.World) {
