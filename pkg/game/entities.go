@@ -42,3 +42,11 @@ func NewGrassEntity() *ecs.BackgroundEntity {
 
 	return &grassEntity
 }
+
+func NewMusicEntity() *ecs.MusicEntity {
+	musicEntity := ecs.MusicEntity{
+		BasicEntity:    engoecs.BasicEntity{},
+		MusicComponent: &ecs.MusicComponent{MusicPath: "res/averys_farm.mp3"},
+	}
+	return &musicEntity
+}
