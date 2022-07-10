@@ -17,7 +17,7 @@ func Initialize() {
 	// This needs to come before any textures are loaded
 	rl.InitWindow(common.ScreenWidth, common.ScreenHeight, "raylib-go course")
 	rl.InitAudioDevice()
-	rl.SetExitKey(rl.KeyF10)
+	rl.SetExitKey(rl.KeyQ)
 	rl.SetTargetFPS(common.TargetFps)
 
 	playerEntity := NewPlayerEntity()

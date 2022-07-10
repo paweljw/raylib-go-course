@@ -46,10 +46,10 @@ func (m *RenderSystem) AddByInterface(o ecs.Identifier) {
 }
 
 func (m *RenderSystem) Add(basic ecs.BasicEntity, texture *TextureComponent, render *RenderComponent) {
-	if texture.textureLoaded == false {
-		texture.texture = rl.LoadTexture(texture.TexturePath)
-		texture.textureLoaded = true
-		log.Printf("Loading texture: %s", texture.TexturePath)
+	if texture.TextureLoaded == false {
+		texture.Texture = rl.LoadTexture(texture.TexturePath)
+		texture.TextureLoaded = true
+		log.Printf("Loading Texture: %s", texture.TexturePath)
 	}
 
 	m.entities = append(m.entities, renderSystemEntity{basic, texture, render})
@@ -63,10 +63,10 @@ func (m *RenderSystem) Remove(basic ecs.BasicEntity) {
 		}
 	}
 	if del >= 0 {
-		if m.entities[del].textureLoaded == true {
-			rl.UnloadTexture(m.entities[del].texture)
-			m.entities[del].textureLoaded = false
-			log.Printf("Unloading texture: %s", m.entities[del].TexturePath)
+		if m.entities[del].TextureLoaded == true && m.entities[del].TexturePath != "" {
+			rl.UnloadTexture(m.entities[del].Texture)
+			m.entities[del].TextureLoaded = false
+			log.Printf("Unloading Texture: %s", m.entities[del].TexturePath)
 		}
 
 		m.entities = append(m.entities[:del], m.entities[del+1:]...)
@@ -88,7 +88,7 @@ func (m *RenderSystem) Update(dt float32) {
 		screenRect := common.WorldRectToScreen(entity.Dest)
 
 		rl.DrawTexturePro(
-			entity.texture,
+			entity.Texture,
 			entity.Src, screenRect,
 			rl.NewVector2(screenRect.Width, screenRect.Height),
 			entity.Rotation,

@@ -7,8 +7,8 @@ import (
 type TextureComponent struct {
 	Src           rl.Rectangle
 	TexturePath   string
-	texture       rl.Texture2D
-	textureLoaded bool
+	Texture       rl.Texture2D
+	TextureLoaded bool
 }
 
 func (r *TextureComponent) GetTextureComponent() *TextureComponent {

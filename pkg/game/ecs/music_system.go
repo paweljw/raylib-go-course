@@ -22,7 +22,7 @@ type MusicSystem struct {
 }
 
 func (m *MusicSystem) New(w *ecs.World) {
-	m.MusicPlaying = true
+	m.MusicPlaying = false
 }
 
 func (m *MusicSystem) Quit() {
@@ -67,9 +67,9 @@ func (m *MusicSystem) Remove(basic ecs.BasicEntity) {
 
 func (m *MusicSystem) Update(dt float32) {
 	// TODO: hmm, I'm not happy with this, but wiring with input might be hard
-	if rl.IsKeyPressed(rl.KeyQ) {
-		m.MusicPlaying = !m.MusicPlaying
-	}
+	//if rl.IsKeyPressed(rl.KeyQ) {
+	//	m.MusicPlaying = !m.MusicPlaying
+	//}
 
 	rl.UpdateMusicStream(m.entity.music)
 
