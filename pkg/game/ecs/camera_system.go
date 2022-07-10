@@ -48,6 +48,18 @@ func (m *CameraSystem) Remove(basic ecs.BasicEntity) {
 }
 
 func (m *CameraSystem) Update(dt float32) {
+	if rl.IsKeyDown(rl.KeyEqual) {
+		m.entity.Camera.Zoom = rl.Clamp(m.entity.Camera.Zoom+0.01, 0, 3)
+	}
+
+	if rl.IsKeyDown(rl.KeyMinus) {
+		m.entity.Camera.Zoom = rl.Clamp(m.entity.Camera.Zoom-0.01, 0.3, 3)
+	}
+
+	if rl.IsKeyPressed(rl.KeyZero) {
+		m.entity.Camera.Zoom = 1.0
+	}
+
 	m.entity.Camera.Target = rl.NewVector2(
 		common.WorldWidthToScreen(m.entity.Dest.X-m.entity.Dest.Width/2),
 		common.WorldHeightToScreen(m.entity.Dest.Y-m.entity.Dest.Height/2),

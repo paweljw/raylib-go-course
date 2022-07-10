@@ -22,6 +22,14 @@ func NewPlayerEntity() *ecs.PlayerEntity {
 		},
 		InputComponent:  &ecs.InputComponent{Speed: common.PlayerSpeed},
 		CameraComponent: &ecs.CameraComponent{Camera: rl.NewCamera2D(rl.NewVector2(common.ScreenWidth/2, common.ScreenHeight/2), rl.NewVector2(0, 0), 0, 1.0)},
+		AnimationComponent: &ecs.AnimationComponent{
+			Frame:                   0,
+			State:                   0,
+			MaxFrames:               2,
+			FramesPerAnimationFrame: 8,
+			Playing:                 false,
+			PlayingOffset:           2,
+		},
 	}
 
 	return &playerEntity

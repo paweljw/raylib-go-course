@@ -10,6 +10,7 @@ func NewWorld() *ecs.World {
 	w := &ecs.World{}
 	AddBackgroundFloodSystemToWorld(w)
 	AddInputSystemToWorld(w)
+	AddAnimationSystemToWorld(w)
 	AddCameraSystemToWorld(w)
 	AddRenderSystemToWorld(w)
 	AddMusicSystemToWorld(w)

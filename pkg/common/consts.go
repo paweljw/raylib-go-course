@@ -9,7 +9,7 @@ const (
 	WorldWidth  = 16
 	WorldHeight = 9
 
-	TargetFps   = 300
+	TargetFps   = 60
 	PlayerSpeed = 0.05
 )
 

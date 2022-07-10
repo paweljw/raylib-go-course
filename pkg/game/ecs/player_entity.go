@@ -8,4 +8,5 @@ type PlayerEntity struct {
 	*RenderComponent
 	*InputComponent
 	*CameraComponent
+	*AnimationComponent
 }
