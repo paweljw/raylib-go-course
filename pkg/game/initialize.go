@@ -1,18 +1,28 @@
 package game
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	engoecs "github.com/EngoEngine/ecs"
+	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/paweljw/raylib-go-course/pkg/common"
+	"github.com/paweljw/raylib-go-course/pkg/game/ecs"
+)
+
+var (
+	world *engoecs.World
+)
 
 func Initialize() {
+	world = ecs.NewWorld()
+
 	// This needs to come before any textures are loaded
-	rl.InitWindow(screenWidth, screenHeight, "raylib-go course")
+	rl.InitWindow(common.ScreenWidth, common.ScreenHeight, "raylib-go course")
 
 	rl.SetExitKey(rl.KeyF10)
-	rl.SetTargetFPS(targetFps)
+	rl.SetTargetFPS(common.TargetFps)
 
-	playerSrc = rl.NewRectangle(0, 0, 48, 48)
+	playerEntity := NewPlayerEntity()
+	grassEntity := NewGrassEntity()
 
-	playerDest = rl.NewRectangle(100, 100, 100, 100)
-
-	grassTexture = rl.LoadTexture("res/sproutlands/Tilesets/Grass.png")
-	playerTexture = rl.LoadTexture("res/sproutlands/Characters/character_spritesheet.png")
+	world.AddEntity(grassEntity)
+	world.AddEntity(playerEntity)
 }
