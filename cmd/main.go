@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/paweljw/raylib-go-course/pkg/game"
-)
+import "github.com/paweljw/raylib-go-course/pkg/game"
 
 func main() {
 	game.Initialize()

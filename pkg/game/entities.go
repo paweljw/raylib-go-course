@@ -5,10 +5,30 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/paweljw/raylib-go-course/pkg/common"
 	"github.com/paweljw/raylib-go-course/pkg/game/ecs"
+	"github.com/paweljw/raylib-go-course/pkg/game/tilemap"
+	"github.com/solarlune/ldtkgo"
 	"log"
 )
 
 func NewPlayerEntity() *ecs.PlayerEntity {
+	levelProject, err := tilemap.LoadWorld("./res/", "level.ldtk")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	levelEntities, err := levelProject.LevelEntities("Level_0")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	var playerStart *ldtkgo.Entity
+	for _, entity := range levelEntities {
+		if entity.Identifier == "Player_start" {
+			playerStart = entity
+			break
+		}
+	}
+	log.Printf("Position: x %d, y %d", playerStart.Position[0], playerStart.Position[1])
+
 	playerEntity := ecs.PlayerEntity{
 		BasicEntity: engoecs.BasicEntity{},
 		TextureComponent: &ecs.TextureComponent{
@@ -17,12 +37,13 @@ func NewPlayerEntity() *ecs.PlayerEntity {
 			TexturePath: "res/sproutlands/Characters/character_spritesheet.png",
 		},
 		RenderComponent: &ecs.RenderComponent{
-			Dest:     rl.NewRectangle(8, 4.5, 2, 2),
+			Dest: rl.NewRectangle(float32(playerStart.Position[0]-playerStart.Width), float32(playerStart.Position[1]-playerStart.Height),
+				48, 48),
 			Rotation: 0,
 			Tint:     rl.White,
 		},
 		InputComponent:  &ecs.InputComponent{Speed: common.PlayerSpeed},
-		CameraComponent: &ecs.CameraComponent{Camera: rl.NewCamera2D(rl.NewVector2(common.ScreenWidth/2, common.ScreenHeight/2), rl.NewVector2(0, 0), 0, 1.0)},
+		CameraComponent: &ecs.CameraComponent{Camera: rl.NewCamera2D(rl.NewVector2(common.ScreenWidth/2, common.ScreenHeight/2), rl.NewVector2(0, 0), 0, 5.0)},
 		AnimationComponent: &ecs.AnimationComponent{
 			Frame:                   0,
 			State:                   0,
@@ -37,75 +58,27 @@ func NewPlayerEntity() *ecs.PlayerEntity {
 }
 
 func NewGrassEntity() *ecs.BackgroundEntity {
-	sourceTexture := rl.LoadTexture("res/sproutlands/Tilesets/Grass.png")
-
-	tilemap := []int{
-		4, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-		5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-		10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+	levelProject, err := tilemap.LoadWorld("./res/", "level.ldtk")
+	if err != nil {
+		log.Fatalln(err)
 	}
-	tilemapWidth := 10
-	tilemapHeight := 10
-	tileWidth := 16
-	tileHeight := 16
-	sourceWidth := 160
 
-	target := rl.LoadRenderTexture(int32(tilemapWidth*tileWidth), int32(tilemapHeight*tileHeight))
-
-	rl.BeginTextureMode(target)
-	rl.ClearBackground(rl.Black)
-	for i := 0; i < tilemapWidth; i++ {
-		for j := 0; j < tilemapHeight; j++ {
-			// tilemap[i+j*tilemapWidth]
-			sourceX := tilemap[i+j*tilemapWidth] * tileWidth % sourceWidth
-			sourceY := (tilemap[i+j*tilemapWidth] * tileWidth / sourceWidth) * tileHeight
-			log.Printf("i:%d, j:%d, sourceX: %d, sourceY: %d", i, j, sourceX, sourceY)
-
-			rl.DrawTexturePro(
-				sourceTexture,
-				rl.NewRectangle(
-					float32(sourceX),
-					float32(sourceY),
-					float32(-tileWidth),
-					float32(tileHeight),
-				),
-				rl.NewRectangle(
-					float32(i*tileWidth),
-					float32((tilemapHeight*tileHeight)-(j+1)*tileHeight),
-					float32(tileWidth),
-					float32(tileHeight),
-				),
-				rl.NewVector2(float32(tileWidth), float32(tileHeight)),
-				180,
-				rl.White,
-			)
-		}
+	texture, err := levelProject.LevelTiles("Level_0")
+	if err != nil {
+		log.Fatalln(err)
 	}
-	rl.EndTextureMode()
 
-	sourceRect := rl.NewRectangle(0, 0, float32(tileWidth*tilemapWidth), float32(tileHeight*tilemapHeight))
-	destRect := common.Upscale(sourceRect, 5)
-	destRect.X = common.ScreenWidth / 2
-	destRect.Y = common.ScreenHeight / 2
-	log.Println(destRect)
-
+	sourceRect := rl.NewRectangle(0, 0, float32(texture.Width), float32(texture.Height))
 	grassEntity := ecs.BackgroundEntity{
 		BasicEntity: engoecs.BasicEntity{},
 		TextureComponent: &ecs.TextureComponent{
 			Src:           sourceRect,
 			TexturePath:   "",
-			Texture:       target.Texture,
+			Texture:       *texture,
 			TextureLoaded: true,
 		},
 		RenderComponent: &ecs.RenderComponent{
-			Dest:     common.ScreenRectToWorld(destRect),
+			Dest:     sourceRect,
 			Rotation: 0,
 			Tint:     rl.White,
 		},

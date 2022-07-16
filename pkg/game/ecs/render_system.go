@@ -3,7 +3,6 @@ package ecs
 import (
 	"github.com/EngoEngine/ecs"
 	rl "github.com/gen2brain/raylib-go/raylib"
-	"github.com/paweljw/raylib-go-course/pkg/common"
 	"log"
 )
 
@@ -85,12 +84,10 @@ func (m *RenderSystem) Update(dt float32) {
 	rl.BeginMode2D(*m.camera)
 
 	for _, entity := range m.entities {
-		screenRect := common.WorldRectToScreen(entity.Dest)
-
 		rl.DrawTexturePro(
 			entity.Texture,
-			entity.Src, screenRect,
-			rl.NewVector2(screenRect.Width, screenRect.Height),
+			entity.Src, entity.Dest,
+			rl.NewVector2(0, 0),
 			entity.Rotation,
 			entity.Tint,
 		)

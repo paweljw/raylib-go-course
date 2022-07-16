@@ -3,7 +3,6 @@ package ecs
 import (
 	"github.com/EngoEngine/ecs"
 	rl "github.com/gen2brain/raylib-go/raylib"
-	"github.com/paweljw/raylib-go-course/pkg/common"
 )
 
 type cameraSystemEntity struct {
@@ -61,8 +60,8 @@ func (m *CameraSystem) Update(dt float32) {
 	}
 
 	m.entity.Camera.Target = rl.NewVector2(
-		common.WorldWidthToScreen(m.entity.Dest.X-m.entity.Dest.Width/2),
-		common.WorldHeightToScreen(m.entity.Dest.Y-m.entity.Dest.Height/2),
+		m.entity.Dest.X-m.entity.Dest.Width/2,
+		m.entity.Dest.Y-m.entity.Dest.Height/2,
 	)
 }
 
